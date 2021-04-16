@@ -43,9 +43,13 @@ class UserController extends Controller
         ];
 
         if (Auth::attempt($credentials)) {
+            $userInfo = User::getUser($request->input('user'));
+
             $this->response['result'] = [
-                'user' => $request->input('user'),
+                'id' => $userInfo->id,
+                'user' => $userInfo->user
             ];
+
         } else {
             $this->response['error'] = "Login doesn't exist";
         }
