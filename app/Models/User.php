@@ -20,6 +20,8 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
+        'user',
+        'avatar',
         'email',
         'password',
     ];
@@ -45,7 +47,7 @@ class User extends Authenticatable
 
 
     public static function getUsers()  {
-        return DB::table('users')->select('name', 'email')->get();
+        return DB::table('users')->select('*')->get();
     }
 
     public static function getUser($user) {

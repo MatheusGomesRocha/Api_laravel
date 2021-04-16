@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Intervention\Image\Facades\Image;
 
 class UserController extends Controller
 {
@@ -26,7 +27,7 @@ class UserController extends Controller
 
         // return $this->response;
 
-        return view('welcome');
+        return view('welcome')->with('users', $users);
     }
 
     public function login(Request $request)
@@ -69,6 +70,7 @@ class UserController extends Controller
 
         if ($hasUser == 0) {
             $data = [
+                'avatar' => '',
                 'name' => $request->input('name'),
                 'user' => $request->input('user'),
                 'email' => $request->input('email'),
@@ -172,6 +174,35 @@ class UserController extends Controller
 
         return $this->response;
     }
+
+    public function updateAvatar(Request $request)
+    {
+        $image = $request->file('avatar');
+        $user = $request->input('user');
+
+        if ($image) {
+            if ($request->hasFile('avatar') && $request->file('avatar')->isValid()) {
+                $img = rand();
+
+                $extensao = $request->file('avatar')->extension();
+                $file = "$img.$extensao";
+                $upload = $request->file('avatar')->storeAs('public/media/avatars/', $file);
+
+                DB::table('users')->where('user', '=', $user)->update([
+                    'avatar' => $file,
+                ]);
+
+                $this->response['result'] = url('storage/media/avatars/'.$file);
+            } else {
+                $this->response['error'] = 'File not supported';
+            }
+        } else {
+            $this->response['error'] = 'Send a file';
+        }
+
+        return $this->response;
+    }
+
 
 
     private function validationRegister($data)
