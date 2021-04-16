@@ -81,13 +81,17 @@ class UserController extends Controller
 
     public function delete($user)
     {
-        $delete = User::deleteUser($user);
+        $userInfo = User::getUser($user);
 
-        if ($delete) {
+        if($userInfo) {
+            $delete = User::deleteUser($user);
+
             $this->response['result'] = 'User deleted';
+
         } else {
-            $this->response['error'] = 'ERROR - try again';
+            $this->response['error'] = 'User not found';
         }
+
 
         return $this->response;
     }
@@ -122,15 +126,26 @@ class UserController extends Controller
             $newPassword = $password;
         }
 
-        if (Hash::check($password, $userInfo->password)) {
-            User::updateUser($name, $user, $email, $newPassword);
-            $this->response['result'] = 'User updated';
-            return $this->response;
+        if($userInfo) {
+            if (Hash::check($password, $userInfo->password)) {
+                User::updateUser($name, $user, $email, $newPassword);
+                $this->response['result'] = [
+                    'name' => $name,
+                    'user' => $user,
+                    'email' => $email,
+                    'password' => $newPassword
+                ];
+                return $this->response;
+            } else {
+                $this->response['error'] = 'Incorrect Password';
+                return $this->response;
+            }
         } else {
-            $this->response['error'] = 'Incorrect Password';
-            return $this->response;
+            $this->response['error'] = 'User not found';
         }
+
     }
+
 
 
     private function validationRegister($data)
