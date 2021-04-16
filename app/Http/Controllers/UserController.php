@@ -48,6 +48,7 @@ class UserController extends Controller
 
             return $this->response['result'] = [
                 'id' => $userInfo->id,
+                'avatar' => url('storage/media/avatars/'.$userInfo->avatar),
                 'user' => $userInfo->user
             ];
 
@@ -200,6 +201,8 @@ class UserController extends Controller
         } else {
             return $this->response['error'] = 'Send a file';
         }
+
+        return $this->response;
     }
 
 
