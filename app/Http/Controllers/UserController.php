@@ -31,12 +31,18 @@ class UserController extends Controller
 
     public function login(Request $request)
     {
+        $validation = $this->validationLogin($request->all());
+
+        if ($validation->fails()) {
+            return $this->response['error'] = 'Campos não preenchidos';
+        }
+
         $credentials = [
             'user' => $request->input('user'),
             'password' => $request->input('password')
         ];
 
-        if(Auth::attempt($credentials)) {
+        if (Auth::attempt($credentials)) {
             $this->response['result'] = 'Login successfully';
             return $this->response;
         } else {
@@ -73,16 +79,52 @@ class UserController extends Controller
         }
     }
 
-    public function delete($user) {
-        $delete = DB::table('users')->where('user', '=', $user)->delete();
+    public function delete($user)
+    {
+        $delete = User::deleteUser($user);
 
-        if($delete) {
+        if ($delete) {
             $this->response['result'] = 'User deleted';
         } else {
             $this->response['error'] = 'ERROR - try again';
         }
 
         return $this->response;
+    }
+
+    public function update(Request $request, $user)
+    {
+        $validation = $this->validationUpdate($request->all());
+
+        if ($validation->fails()) {
+            return $this->response['error'] = 'Campos não preenchidos';
+        }
+
+        $userInfo = User::getUser($user);
+
+        $password = $request->input('password');
+        $newPassword = $request->input('new_password');
+
+        if($request->input('name')) {
+            $name = $request->input('name');
+        } else {
+            $name = $userInfo->name;
+        }
+
+        if($request->input('email')) {
+            $email = $request->input('email');
+        } else {
+            $email = $userInfo->email;
+        }
+
+        if (Hash::check($password, $userInfo->password)) {
+            User::updateUser($name, $user, $email, $newPassword);
+            $this->response['result'] = 'User updated';
+            return $this->response;
+        } else {
+            $this->response['error'] = 'Incorrect Password';
+            return $this->response;
+        }
     }
 
 
@@ -110,11 +152,24 @@ class UserController extends Controller
     {
         $regras = [
             'user' => 'required',
-            'password' => 'required|min:6',
+            'password' => 'required',
         ];
 
         $mensagens = [
             'user.required' => 'Preencha o campo usuário',
+            'password.required' => 'Preencha o campo senha',
+        ];
+
+        return Validator::make($data, $regras, $mensagens);
+    }
+
+    private function validationUpdate($data)
+    {
+        $regras = [
+            'password' => 'required',
+        ];
+
+        $mensagens = [
             'password.required' => 'Preencha o campo senha',
         ];
 

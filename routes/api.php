@@ -25,3 +25,4 @@ Route::get('/users', [\App\Http\Controllers\UserController::class, 'getUsers']);
 Route::post('/registerUser', [\App\Http\Controllers\UserController::class, 'registerUser']);
 Route::post('/login', [\App\Http\Controllers\UserController::class, 'login']);
 Route::post('/delete/{user}', [\App\Http\Controllers\UserController::class, 'delete']);
+Route::put('/update/{user}', [\App\Http\Controllers\UserController::class, 'update']);
