@@ -73,6 +73,18 @@ class UserController extends Controller
         }
     }
 
+    public function delete($user) {
+        $delete = DB::table('users')->where('user', '=', $user)->delete();
+
+        if($delete) {
+            $this->response['result'] = 'User deleted';
+        } else {
+            $this->response['error'] = 'ERROR - try again';
+        }
+
+        return $this->response;
+    }
+
 
     private function validationRegister($data)
     {
