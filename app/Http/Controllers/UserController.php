@@ -34,7 +34,7 @@ class UserController extends Controller
         $validation = $this->validationLogin($request->all());
 
         if ($validation->fails()) {
-            return $this->response['error'] = 'Campos não preenchidos';
+            $this->response['error'] = 'Campos não preenchidos';
         }
 
         $credentials = [
@@ -43,12 +43,14 @@ class UserController extends Controller
         ];
 
         if (Auth::attempt($credentials)) {
-            $this->response['result'] = 'Login successfully';
-            return $this->response;
+            $this->response['result'] = [
+                'user' => $request->input('user'),
+            ];
         } else {
             $this->response['error'] = "Login doesn't exist";
-            return $this->response;
         }
+
+        return $this->response;
     }
 
     public function registerUser(Request $request)
@@ -56,7 +58,7 @@ class UserController extends Controller
         $validation = $this->validationRegister($request->all());
 
         if ($validation->fails()) {
-            return $this->response['error'] = 'Campos não preenchidos';
+            $this->response['error'] = 'Campos não preenchidos';
         }
 
         $hasUser = DB::table('users')->select('*')->where('user', '=', $request->input('user'))->count();
@@ -72,22 +74,26 @@ class UserController extends Controller
             $create = DB::table('users')->insert($data);
 
             $this->response['result'][] = [$data];
-
-            return $this->response;
         } else {
-            return $this->response['error'] = 'Usuário já cadastrado';
+            $this->response['error'] = 'Usuário já cadastrado';
         }
+
+        return $this->response;
     }
 
-    public function delete($user)
+    public function delete(Request $request, $user)
     {
         $userInfo = User::getUser($user);
+        $password = $request->input('password');
 
-        if($userInfo) {
-            $delete = User::deleteUser($user);
+        if ($userInfo) {
+            if (Hash::check($password, $userInfo->password)) {
+                $delete = User::deleteUser($user);
 
-            $this->response['result'] = 'User deleted';
-
+                $this->response['result'] = 'User deleted';
+            } else {
+                $this->response['error'] = 'Sorry, wrong password';
+            }
         } else {
             $this->response['error'] = 'User not found';
         }
@@ -101,32 +107,32 @@ class UserController extends Controller
         $validation = $this->validationUpdate($request->all());
 
         if ($validation->fails()) {
-            return $this->response['error'] = 'Campos não preenchidos';
+            $this->response['error'] = 'Campos não preenchidos';
         }
 
         $userInfo = User::getUser($user);
 
         $password = $request->input('password');
 
-        if($request->input('name')) {
+        if ($request->input('name')) {
             $name = $request->input('name');
         } else {
             $name = $userInfo->name;
         }
 
-        if($request->input('email')) {
+        if ($request->input('email')) {
             $email = $request->input('email');
         } else {
             $email = $userInfo->email;
         }
 
-        if($request->input('new_password')) {
+        if ($request->input('new_password')) {
             $newPassword = $request->input('new_password');
         } else {
             $newPassword = $password;
         }
 
-        if($userInfo) {
+        if ($userInfo) {
             if (Hash::check($password, $userInfo->password)) {
                 User::updateUser($name, $user, $email, $newPassword);
                 $this->response['result'] = [
@@ -135,17 +141,33 @@ class UserController extends Controller
                     'email' => $email,
                     'password' => $newPassword
                 ];
-                return $this->response;
+                $this->response;
             } else {
                 $this->response['error'] = 'Incorrect Password';
-                return $this->response;
+                $this->response;
             }
         } else {
             $this->response['error'] = 'User not found';
         }
 
+        return $this->response;
     }
 
+    public function getUserLogin($user)
+    {
+        $userInfo = User::getUser($user);
+
+        if ($userInfo) {
+            $this->response['result'] = [
+                'name' => $userInfo->name,
+                'user' => $userInfo->user,
+                'email' => $userInfo->email,
+                'password' => $userInfo->password,
+            ];
+        }
+
+        return $this->response;
+    }
 
 
     private function validationRegister($data)

@@ -22,6 +22,7 @@ Route::get('/ping', function (Request $request) {
     return ['pong'=>true];
 });
 Route::get('/users', [\App\Http\Controllers\UserController::class, 'getUsers']);
+Route::get('/user/{user}', [\App\Http\Controllers\UserController::class, 'getUserLogin']);
 Route::post('/registerUser', [\App\Http\Controllers\UserController::class, 'registerUser']);
 Route::post('/login', [\App\Http\Controllers\UserController::class, 'login']);
 Route::delete('/delete/{user}', [\App\Http\Controllers\UserController::class, 'delete']);
