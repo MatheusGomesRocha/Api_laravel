@@ -10,7 +10,13 @@
 
 <body class="antialiased">
 <div>
-    {{}}
+    <form method="POST" action="/api/login">
+        @csrf
+        {{$teste}}
+        <input type="text" name="user" />
+        <input type="text" name="password" />
+        <input type="submit" />
+    </form>
 </div>
 </body>
 </html>

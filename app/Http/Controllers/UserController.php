@@ -103,7 +103,6 @@ class UserController extends Controller
         $userInfo = User::getUser($user);
 
         $password = $request->input('password');
-        $newPassword = $request->input('new_password');
 
         if($request->input('name')) {
             $name = $request->input('name');
@@ -115,6 +114,12 @@ class UserController extends Controller
             $email = $request->input('email');
         } else {
             $email = $userInfo->email;
+        }
+
+        if($request->input('new_password')) {
+            $newPassword = $request->input('new_password');
+        } else {
+            $newPassword = $password;
         }
 
         if (Hash::check($password, $userInfo->password)) {
