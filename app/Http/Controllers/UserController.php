@@ -35,7 +35,7 @@ class UserController extends Controller
         $validation = $this->validationLogin($request->all());
 
         if ($validation->fails()) {
-            $this->response['error'] = 'Campos não preenchidos';
+            return $this->response['error'] = 'Campos não preenchidos';
         }
 
         $credentials = [
@@ -46,13 +46,13 @@ class UserController extends Controller
         if (Auth::attempt($credentials)) {
             $userInfo = User::getUser($request->input('user'));
 
-            $this->response['result'] = [
+            return $this->response['result'] = [
                 'id' => $userInfo->id,
                 'user' => $userInfo->user
             ];
 
         } else {
-            $this->response['error'] = "Login doesn't exist";
+            return $this->response['error'] = "Login doesn't exist";
         }
 
         return $this->response;
@@ -63,7 +63,7 @@ class UserController extends Controller
         $validation = $this->validationRegister($request->all());
 
         if ($validation->fails()) {
-            $this->response['error'] = 'Campos não preenchidos';
+            return $this->response['error'] = 'Campos não preenchidos';
         }
 
         $hasUser = DB::table('users')->select('*')->where('user', '=', $request->input('user'))->count();
@@ -79,9 +79,9 @@ class UserController extends Controller
 
             $create = DB::table('users')->insert($data);
 
-            $this->response['result'][] = [$data];
+            return $this->response['result'][] = [$data];
         } else {
-            $this->response['error'] = 'Usuário já cadastrado';
+            return $this->response['error'] = 'Usuário já cadastrado';
         }
 
         return $this->response;
@@ -96,12 +96,12 @@ class UserController extends Controller
             if (Hash::check($password, $userInfo->password)) {
                 $delete = User::deleteUser($user);
 
-                $this->response['result'] = 'User deleted';
+                return $this->response['result'] = 'User deleted';
             } else {
-                $this->response['error'] = 'Sorry, wrong password';
+                return $this->response['error'] = 'Sorry, wrong password';
             }
         } else {
-            $this->response['error'] = 'User not found';
+            return $this->response['error'] = 'User not found';
         }
 
 
@@ -113,7 +113,7 @@ class UserController extends Controller
         $validation = $this->validationUpdate($request->all());
 
         if ($validation->fails()) {
-            $this->response['error'] = 'Campos não preenchidos';
+            return $this->response['error'] = 'Campos não preenchidos';
         }
 
         $userInfo = User::getUser($user);
@@ -147,13 +147,13 @@ class UserController extends Controller
                     'email' => $email,
                     'password' => $newPassword
                 ];
-                $this->response;
+                return $this->response;
             } else {
                 $this->response['error'] = 'Incorrect Password';
-                $this->response;
+                return $this->response;
             }
         } else {
-            $this->response['error'] = 'User not found';
+            return $this->response['error'] = 'User not found';
         }
 
         return $this->response;
@@ -165,6 +165,7 @@ class UserController extends Controller
 
         if ($userInfo) {
             $this->response['result'] = [
+                'avatar' => url('storage/media/avatars/'.$userInfo->avatar),
                 'name' => $userInfo->name,
                 'user' => $userInfo->user,
                 'email' => $userInfo->email,
@@ -192,15 +193,13 @@ class UserController extends Controller
                     'avatar' => $file,
                 ]);
 
-                $this->response['result'] = url('storage/media/avatars/'.$file);
+                return $this->response['result'] = url('storage/media/avatars/'.$file);
             } else {
-                $this->response['error'] = 'File not supported';
+                return $this->response['error'] = 'File not supported';
             }
         } else {
-            $this->response['error'] = 'Send a file';
+            return $this->response['error'] = 'Send a file';
         }
-
-        return $this->response;
     }
 
 

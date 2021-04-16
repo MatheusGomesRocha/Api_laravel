@@ -25,6 +25,6 @@ Route::get('/users', [\App\Http\Controllers\UserController::class, 'getUsers']);
 Route::get('/user/{user}', [\App\Http\Controllers\UserController::class, 'getUserLogin']);
 Route::post('/registerUser', [\App\Http\Controllers\UserController::class, 'registerUser']);
 Route::post('/login', [\App\Http\Controllers\UserController::class, 'login']);
-Route::delete('/user//delete/{user}', [\App\Http\Controllers\UserController::class, 'delete']);
+Route::delete('/user/delete/{user}', [\App\Http\Controllers\UserController::class, 'delete']);
 Route::put('/user/update/{user}', [\App\Http\Controllers\UserController::class, 'update']);
 Route::post('/user/avatar', [\App\Http\Controllers\UserController::class, 'updateAvatar']);
