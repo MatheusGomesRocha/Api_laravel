@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cart;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -16,6 +17,8 @@ class UserController extends Controller
     public function getUsers()
     {
         $users = User::getUsers();
+
+        $cart = Cart::getCart('27');
 
         foreach ($users as $query) {
             $this->response['result'][] = [

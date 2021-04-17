@@ -56,9 +56,18 @@ class ProductController extends Controller
         if($products->count() === 0) {
             $this->response['error'] = 'Ainda não tem nenhum item cadastrado';
         } else {
-            $this->response['result'] = [
-                $products
-            ];
+            foreach($products as $query) {
+                $this->response['result'][] = [
+                    'id' => $query->id,
+                    'img' => $query->img,
+                    'name' => $query->name,
+                    'price' => $query->price,
+                    'description' => $query->description,
+                    'category' => $query->category,
+                    'rate' => $query->rate,
+                    'time' => $query->time,
+                ];
+            }
         }
 
         return $this->response;

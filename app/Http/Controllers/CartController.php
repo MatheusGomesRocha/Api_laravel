@@ -14,15 +14,12 @@ class CartController extends Controller
     public function insertCart(Request $request) {
         $userId = $request->input('userId');
         $productId = $request->input('productId');
-        $productName = $request->input('name');
-        $productImg = $request->input('img');
-        $productPrice = $request->input('price');
         $productQuantity = $request->input('quantity');
 
-        $insert = Cart::insertCart($userId, $productId, $productName, $productImg, $productPrice, $productQuantity);
+        $insert = Cart::insertCart($userId, $productId, $productQuantity);
 
         if($insert) {
-            $this->response['result'] = ['Added to cart'];
+            $this->response['result'] = 'Added to cart';
         } else {
             $this->response['error'] = 'Sorry, something went wrong';
         }
@@ -36,9 +33,32 @@ class CartController extends Controller
         if($cart->count() === 0) {
             $this->response['error'] = 'Sorry, something went wrong';
         } else {
-            $this->response['result'] = [
-                $cart,
-            ];
+            foreach($cart as $query) {
+                $this->response['result'][] = [
+                    'id' => $query->id,
+                    'productId' => $query->productId,
+                    'name' => $query->name,
+                    'price' => $query->price,
+                    'img' => $query->img,
+                ];
+            }
+        }
+
+        return $this->response;
+    }
+
+    public function makeOrder(Request $request) {
+        $userId = $request->input('userId');
+        $subtotal = $request->input('subtotal');
+
+        $cart = Cart::getCartToOrder($userId);
+
+        $makeOrder = Cart::makeOrder($cart, $subtotal, $userId);
+
+        if($makeOrder) {
+            $this->response['result'] = 'Success, just wait to your products';
+        } else {
+            $this->response['error'] = 'Sorry, something went wrong';
         }
 
         return $this->response;

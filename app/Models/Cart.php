@@ -10,19 +10,37 @@ class Cart extends Model
 {
     use HasFactory;
 
-    public static function insertCart($userId, $productId, $productName, $productImg, $productPrice, $productQuantity)
+    public static function insertCart($userId, $productId, $productQuantity)
     {
         return DB::table('cart')->insert([
             'userId' => $userId,
             'productId' => $productId,
-            'name' => $productName,
-            'img' => $productImg,
-            'price' => $productPrice,
             'quantity' => $productQuantity,
         ]);
     }
 
-    public static function getCart($userId) {
-        return DB::table('cart')->where('userId', '=', $userId)->get();
+    public static function getCart($userId)
+    {
+        return DB::table('cart')
+            ->join('products', 'products.id', '=', 'cart.productId')
+            ->where('cart.userId', '=', $userId)
+            ->get();
+    }
+
+    public static function getCartToOrder($userId)
+    {
+        return DB::table('cart')
+            ->select('productId')
+            ->where('userId', '=', $userId)
+            ->get();
+}
+
+    public static function makeOrder($cart, $subtotal, $userId)
+    {
+        return DB::table('orders')->insert([
+            'orderInfo' => $cart,
+            'subtotal' => $subtotal,
+            'userId' => $userId
+        ]);
     }
 }

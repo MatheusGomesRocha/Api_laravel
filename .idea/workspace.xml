@@ -5,9 +5,12 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Http/Controllers/CartController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/CartController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Http/Controllers/ProductController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/ProductController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/UserController.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/UserController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/Models/Cart.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Models/Cart.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database/migrations/2021_04_16_174458_create_cart_table.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/database/migrations/2021_04_17_171335_create_cart_table.php" beforeDir="false" afterPath="$PROJECT_DIR$/database/migrations/2021_04_17_171335_create_orders_table.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/welcome.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/welcome.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/api.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/api.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/web.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/web.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -172,7 +175,7 @@
       <workItem from="1618531435508" duration="5655000" />
       <workItem from="1618577921683" duration="3923000" />
       <workItem from="1618603822474" duration="6124000" />
-      <workItem from="1618675169291" duration="4900000" />
+      <workItem from="1618675169291" duration="14638000" />
     </task>
     <servers />
   </component>
@@ -196,7 +199,7 @@
       <breakpoints>
         <line-breakpoint enabled="true" type="php-line-method">
           <url>file://$PROJECT_DIR$/app/Http/Controllers/UserController.php</url>
-          <line>60</line>
+          <line>63</line>
           <properties>
             <option name="className" value="\App\Http\Controllers\UserController" />
             <option name="methodName" value="registerUser" />
@@ -205,7 +208,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php-line-method">
           <url>file://$PROJECT_DIR$/app/Http/Controllers/UserController.php</url>
-          <line>110</line>
+          <line>113</line>
           <properties>
             <option name="className" value="\App\Http\Controllers\UserController" />
             <option name="methodName" value="update" />
@@ -214,12 +217,21 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="php-line-method">
           <url>file://$PROJECT_DIR$/app/Http/Controllers/UserController.php</url>
-          <line>242</line>
+          <line>245</line>
           <properties>
             <option name="className" value="\App\Http\Controllers\UserController" />
             <option name="methodName" value="validationUpdate" />
           </properties>
           <option name="timeStamp" value="13" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="php-line-method">
+          <url>file://$PROJECT_DIR$/app/Http/Controllers/CartController.php</url>
+          <line>29</line>
+          <properties>
+            <option name="className" value="\App\Http\Controllers\CartController" />
+            <option name="methodName" value="getCart" />
+          </properties>
+          <option name="timeStamp" value="15" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

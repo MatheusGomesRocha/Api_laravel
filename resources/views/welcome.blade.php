@@ -10,16 +10,10 @@
 
 <body class="antialiased">
 <div>
-    <form method="POST" action="/api/login">
-        @csrf
-        <input type="text" name="user"/>
-        <input type="text" name="password"/>
-        <input type="submit"/>
-    </form>
 
-    @foreach($users as $row)
-        <img src='{{ url("storage/media/avatars/$row->avatar") }}' >
-    @endforeach
+
+
+
 </div>
 </body>
 </html>
