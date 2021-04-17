@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Intervention\Image\Facades\Image;
 
 class UserController extends Controller
 {
@@ -46,14 +45,14 @@ class UserController extends Controller
         if (Auth::attempt($credentials)) {
             $userInfo = User::getUser($request->input('user'));
 
-            return $this->response['result'] = [
+            $this->response['result'] = [
                 'id' => $userInfo->id,
-                'avatar' => url('storage/media/avatars/'.$userInfo->avatar),
+                'avatar' => url('storage/media/avatars/' . $userInfo->avatar),
                 'user' => $userInfo->user
             ];
 
         } else {
-            return $this->response['error'] = "Login doesn't exist";
+            $this->response['error'] = "Login doesn't exist";
         }
 
         return $this->response;
@@ -80,9 +79,9 @@ class UserController extends Controller
 
             $create = DB::table('users')->insert($data);
 
-            return $this->response['result'][] = [$data];
+            $this->response['result'][] = [$data];
         } else {
-            return $this->response['error'] = 'Usuário já cadastrado';
+            $this->response['error'] = 'Usuário já cadastrado';
         }
 
         return $this->response;
@@ -97,12 +96,12 @@ class UserController extends Controller
             if (Hash::check($password, $userInfo->password)) {
                 $delete = User::deleteUser($user);
 
-                return $this->response['result'] = 'User deleted';
+                $this->response['result'] = 'User deleted';
             } else {
-                return $this->response['error'] = 'Sorry, wrong password';
+                $this->response['error'] = 'Sorry, wrong password';
             }
         } else {
-            return $this->response['error'] = 'User not found';
+            $this->response['error'] = 'User not found';
         }
 
 
@@ -148,13 +147,13 @@ class UserController extends Controller
                     'email' => $email,
                     'password' => $newPassword
                 ];
-                return $this->response;
+                $this->response;
             } else {
                 $this->response['error'] = 'Incorrect Password';
-                return $this->response;
+                $this->response;
             }
         } else {
-            return $this->response['error'] = 'User not found';
+            $this->response['error'] = 'User not found';
         }
 
         return $this->response;
@@ -166,7 +165,7 @@ class UserController extends Controller
 
         if ($userInfo) {
             $this->response['result'] = [
-                'avatar' => url('storage/media/avatars/'.$userInfo->avatar),
+                'avatar' => url('storage/media/avatars/' . $userInfo->avatar),
                 'name' => $userInfo->name,
                 'user' => $userInfo->user,
                 'email' => $userInfo->email,
@@ -194,17 +193,16 @@ class UserController extends Controller
                     'avatar' => $file,
                 ]);
 
-                return $this->response['result'] = url('storage/media/avatars/'.$file);
+                $this->response['result'] = url('storage/media/avatars/' . $file);
             } else {
-                return $this->response['error'] = 'File not supported';
+                $this->response['error'] = 'File not supported';
             }
         } else {
-            return $this->response['error'] = 'Send a file';
+            $this->response['error'] = 'Send a file';
         }
 
         return $this->response;
     }
-
 
 
     private function validationRegister($data)
