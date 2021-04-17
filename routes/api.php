@@ -31,4 +31,7 @@ Route::put('/user/update/{user}', [\App\Http\Controllers\UserController::class, 
 Route::post('/user/avatar', [\App\Http\Controllers\UserController::class, 'updateAvatar']);
 
 Route::post('/createProduct', [\App\Http\Controllers\ProductController::class, 'createProduct']);
+Route::get('/products', [\App\Http\Controllers\ProductController::class, 'getProducts']);
+Route::get('/product/{id}', [\App\Http\Controllers\ProductController::class, 'getOneProduct']);
+
 

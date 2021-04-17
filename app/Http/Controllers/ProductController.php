@@ -50,6 +50,35 @@ class ProductController extends Controller
         return $this->response;
     }
 
+    public function getProducts() {
+        $products = Product::products();
+        $count = DB::table('products')->count();
+
+        if($count === 0) {
+            $this->response['error'] = 'Ainda não tem nenhum item cadastrado';
+        } else {
+            $this->response['result'] = [
+                $products
+            ];
+        }
+
+        return $this->response;
+    }
+
+    public function getOneProduct($id) {
+        $product = Product::product($id);
+
+        if($product) {
+            $this->response['result'] = [
+                $product
+            ];
+        } else {
+            $this->response['error'] = 'Sorry, something went wrong';
+        }
+
+        return $this->response;
+    }
+
 
     private function validationProduct($data)
     {

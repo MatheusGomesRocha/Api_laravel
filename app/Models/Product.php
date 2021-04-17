@@ -21,4 +21,12 @@ class Product extends Model
             'rate' => ''
         ]);
     }
+
+    public static function products() {
+        return DB::table('products')->get();
+    }
+
+    public static function product($id) {
+        return DB::table('products')->where('id', '=', $id)->first();
+    }
 }
