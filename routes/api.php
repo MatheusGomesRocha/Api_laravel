@@ -34,4 +34,8 @@ Route::post('/createProduct', [\App\Http\Controllers\ProductController::class, '
 Route::get('/products', [\App\Http\Controllers\ProductController::class, 'getProducts']);
 Route::get('/product/{id}', [\App\Http\Controllers\ProductController::class, 'getOneProduct']);
 
+Route::post('/cart/insertCart', [\App\Http\Controllers\CartController::class, 'insertCart']);
+Route::get('/cart/{id}', [\App\Http\Controllers\CartController::class, 'getCart']);
+
+
 

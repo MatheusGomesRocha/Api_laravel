@@ -52,9 +52,8 @@ class ProductController extends Controller
 
     public function getProducts() {
         $products = Product::products();
-        $count = DB::table('products')->count();
 
-        if($count === 0) {
+        if($products->count() === 0) {
             $this->response['error'] = 'Ainda não tem nenhum item cadastrado';
         } else {
             $this->response['result'] = [
