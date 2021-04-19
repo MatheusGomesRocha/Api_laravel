@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Cart;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Validator;
 
 class CartController extends Controller
 {
@@ -53,7 +51,15 @@ class CartController extends Controller
 
         $cart = Cart::getCartToOrder($userId);
 
-        $makeOrder = Cart::makeOrder($cart, $subtotal, $userId);
+        $array = [];
+
+        foreach($cart as $query) {
+            $array[] = $query->productId;
+        }
+        
+        $implode = implode(', ', $array);
+
+        $makeOrder = Cart::makeOrder($implode, $subtotal, $userId);
 
         if($makeOrder) {
             $this->response['result'] = 'Success, just wait to your products';

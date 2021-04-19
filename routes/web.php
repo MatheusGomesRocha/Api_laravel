@@ -13,4 +13,4 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [\App\Http\Controllers\CartController::class, 'getOrder']);
+Route::get('/', [\App\Http\Controllers\ProductController::class, 'getProducts']);

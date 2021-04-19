@@ -2,6 +2,10 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\OrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,23 +26,23 @@ Route::get('/ping', function (Request $request) {
     return ['pong'=>true];
 });
 
-Route::get('/users', [\App\Http\Controllers\UserController::class, 'getUsers']);
-Route::get('/user/{user}', [\App\Http\Controllers\UserController::class, 'getUserLogin']);
-Route::post('/registerUser', [\App\Http\Controllers\UserController::class, 'registerUser']);
-Route::post('/login', [\App\Http\Controllers\UserController::class, 'login']);
-Route::delete('/user/delete/{user}', [\App\Http\Controllers\UserController::class, 'delete']);
-Route::put('/user/update/{user}', [\App\Http\Controllers\UserController::class, 'update']);
-Route::post('/user/avatar', [\App\Http\Controllers\UserController::class, 'updateAvatar']);
+Route::get('/users', [UserController::class, 'getUsers']);
+Route::get('/user/{user}', [UserController::class, 'getUserLogin']);
+Route::post('/registerUser', [UserController::class, 'registerUser']);
+Route::post('/login', [UserController::class, 'login']);
+Route::delete('/user/delete/{user}', [UserController::class, 'delete']);
+Route::put('/user/update/{user}', [UserController::class, 'update']);
+Route::post('/user/avatar', [UserController::class, 'updateAvatar']);
 
-Route::post('/createProduct', [\App\Http\Controllers\ProductController::class, 'createProduct']);
-Route::get('/products', [\App\Http\Controllers\ProductController::class, 'getProducts']);
-Route::get('/product/{id}', [\App\Http\Controllers\ProductController::class, 'getOneProduct']);
+Route::post('/createProduct', [ProductController::class, 'createProduct']);
+Route::get('/products', [ProductController::class, 'getProducts']);
+Route::get('/product/{id}', [ProductController::class, 'getOneProduct']);
 
-Route::post('/cart/insertCart', [\App\Http\Controllers\CartController::class, 'insertCart']);
-Route::get('/cart/{id}', [\App\Http\Controllers\CartController::class, 'getCart']);
-Route::post('/makeOrder', [\App\Http\Controllers\CartController::class, 'makeOrder']);
+Route::post('/cart/insertCart', [CartController::class, 'insertCart']);
+Route::get('/cart/{id}', [CartController::class, 'getCart']);
+Route::post('/makeOrder', [CartController::class, 'makeOrder']);
 
-// Route::get('/orders', [\App\Http\Controllers\CartController::class, 'getOrder']);
+Route::get('/orders', [OrderController::class, 'getOrder']);
 
 
 
