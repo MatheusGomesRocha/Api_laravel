@@ -61,4 +61,16 @@ class CartController extends Controller
 
         return $this->response;
     }
+
+    public function removeFromCart($id) {
+        $delete = Cart::removeFromCart($id);
+
+        if($delete) {
+            $this->response['result'] = '';
+        } else {
+            $this->response['error'] = 'Sorry, something went wrong';
+        }
+
+        return $this->response;
+    }
 }

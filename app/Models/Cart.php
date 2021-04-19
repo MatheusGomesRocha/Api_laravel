@@ -34,7 +34,7 @@ class Cart extends Model
         ->select('products.name', 'products.price', 'cart.quantity')
         ->where('cart.userId', '=', $userId)
         ->get();
-}
+    }
 
     public static function makeOrder($cart, $subtotal, $userId)
     {
@@ -43,5 +43,9 @@ class Cart extends Model
             'subtotal' => $subtotal,
             'userId' => $userId
         ]);
+    }
+
+    public static function removeFromCart($id) {
+        return DB::table('cart')->where('id', '=', $id)->delete();
     }
 }

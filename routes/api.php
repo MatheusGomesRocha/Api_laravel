@@ -43,6 +43,7 @@ Route::post('/products/setFavorites', [ProductController::class, 'toFavorites'])
 Route::post('/cart/insertCart', [CartController::class, 'insertCart']);
 Route::get('/cart/{id}', [CartController::class, 'getCart']);
 Route::post('/makeOrder', [CartController::class, 'makeOrder']);
+Route::delete('/cart/{id}', [CartController::class, 'removeFromCart']);
 
 Route::get('/orders', [OrderController::class, 'getOrder']);
 
