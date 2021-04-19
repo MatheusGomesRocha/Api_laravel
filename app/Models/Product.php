@@ -30,11 +30,24 @@ class Product extends Model
         return DB::table('products')->where('id', '=', $id)->first();
     }
     
+    public static function getFavoritesIfExists($userId, $productId) {
+        return DB::table('favorites')
+        ->where('userId', '=', $userId)
+        ->where('productId', '=', $productId)
+        ->get();
+    }
+
     public static function getFavorites($userId) {
-        return DB::table('favorites')->where('userId', '=', $userId)->first();
+        return DB::table('favorites')
+        ->join('products', 'products.id', '=', 'favorites.productId')
+        ->where('userId', '=', $userId)
+        ->get();
     }
 
     public static function setFavorites($userId, $productId) {
-        
+        return DB::table('favorites')->insert([
+            'userId' => $userId,
+            'productId' => $productId
+        ]);
     }
 }

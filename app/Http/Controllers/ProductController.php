@@ -90,12 +90,45 @@ class ProductController extends Controller
         $productId = $request->input('productId');
         $userId = $request->input('userId');
         
-        $setFavorite = Product::setFavorite($userId, $productId);
-        
-        if($setFavorite) {
-            $this->response['result'] = 'This product is now on your favorite list';
+        $exists = Product::getFavoritesIfExists($userId, $productId);
+        $product = Product::product($productId);
+
+        // Verifica se tem algum produto com o ID enviado
+        if(!$product) {
+            $this->response['error'] = 'Sorry, you try to added an product that do not exist';
+        } else {    
+            // Verifica se já existe esse produto enviado na lista do usuário enviado
+            if($exists->count() === 0) {
+                $setFavorite = Product::setFavorites($userId, $productId);
+                
+                if($setFavorite) {
+                    $this->response['result'] = 'This product is now on your favorite list';
+                } else {
+                    $this->response['error'] = 'Sorry, something went wrong';
+                }
+            } else {
+                $this->response['error'] = "You've already added this product";
+            }    
+        }
+
+        return $this->response;
+    }
+
+    public function getFavorites(Request $request) {
+        $userId = $request->input('userId');
+
+        $favorites = Product::getFavorites($userId);
+
+        if($favorites->count() === 0) {
+            $this->response['error'] = "Sorry, you didn't added any product to your favorite list";
         } else {
-            $this->response['error'] = 'Sorry, something went wrong';
+            foreach($favorites as $query) {
+                $this->response['result'][] = [
+                    'name' => $query->name,
+                    'price' => $query->price,
+                    'img' => $query->img,
+                ];
+            }
         }
 
         return $this->response;

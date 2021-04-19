@@ -37,6 +37,8 @@ Route::post('/user/avatar', [UserController::class, 'updateAvatar']);
 Route::post('/createProduct', [ProductController::class, 'createProduct']);
 Route::get('/products', [ProductController::class, 'getProducts']);
 Route::get('/product/{id}', [ProductController::class, 'getOneProduct']);
+Route::get('/products/favorites', [ProductController::class, 'getFavorites']);
+Route::post('/products/setFavorites', [ProductController::class, 'toFavorites']);
 
 Route::post('/cart/insertCart', [CartController::class, 'insertCart']);
 Route::get('/cart/{id}', [CartController::class, 'getCart']);
