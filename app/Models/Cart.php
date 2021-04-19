@@ -31,9 +31,9 @@ class Cart extends Model
     {
         return DB::table('products')
         ->join('cart', 'cart.productId', '=', 'products.id')
-        ->select('products.name', 'products.price')
+        ->select('products.name', 'products.price', 'cart.quantity')
         ->where('cart.userId', '=', $userId)
-            ->get();
+        ->get();
 }
 
     public static function makeOrder($cart, $subtotal, $userId)
