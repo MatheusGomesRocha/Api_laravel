@@ -90,7 +90,7 @@ class ProductController extends Controller
         $productId = $request->input('productId');
         $userId = $request->input('userId');
         
-        $exists = Product::getFavoritesIfExists($userId, $productId);
+        $exists = Product::verifyFavorites($userId, $productId);
         $product = Product::product($productId);
 
         // Verifica se tem algum produto com o ID enviado
@@ -98,7 +98,7 @@ class ProductController extends Controller
             $this->response['error'] = 'Sorry, you try to added an product that do not exist';
         } else {    
             // Verifica se já existe esse produto enviado na lista do usuário enviado
-            if($exists->count() === 0) {
+            if(!$exists) {
                 $setFavorite = Product::setFavorites($userId, $productId);
                 
                 if($setFavorite) {
@@ -134,6 +134,25 @@ class ProductController extends Controller
         return $this->response;
     }
 
+    public function removeFromFavorites(Request $request, $userId) {
+        $productId = $request->input('productId');
+
+        $verify = Product::verifyFavorites($userId, $productId);
+
+        if(!$verify) {
+            $this->response['error'] = 'Sorry, something went wrong';
+        } else {
+            $delete = Product::removeFromFavorites($userId, $productId);
+
+            if($delete) {
+                $this->response['result'] = '';
+            } else {
+                $this->response['error'] = "Sorry, couldn't deleted";
+            }
+        }
+
+        return $this->response;
+    }
 
 
     private function validationProduct($data)

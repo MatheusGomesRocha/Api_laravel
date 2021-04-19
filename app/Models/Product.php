@@ -30,11 +30,11 @@ class Product extends Model
         return DB::table('products')->where('id', '=', $id)->first();
     }
     
-    public static function getFavoritesIfExists($userId, $productId) {
+    public static function verifyFavorites($userId, $productId) {
         return DB::table('favorites')
         ->where('userId', '=', $userId)
         ->where('productId', '=', $productId)
-        ->get();
+        ->first();
     }
 
     public static function getFavorites($userId) {
@@ -49,5 +49,12 @@ class Product extends Model
             'userId' => $userId,
             'productId' => $productId
         ]);
+    }
+
+    public static function removeFromFavorites($userId, $productId) {
+        return DB::table('favorites')
+        ->where('userId', '=', $userId)
+        ->where('productId', '=', $productId)
+        ->delete();
     }
 }

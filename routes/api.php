@@ -37,13 +37,14 @@ Route::post('/user/avatar', [UserController::class, 'updateAvatar']);
 Route::post('/createProduct', [ProductController::class, 'createProduct']);
 Route::get('/products', [ProductController::class, 'getProducts']);
 Route::get('/product/{id}', [ProductController::class, 'getOneProduct']);
-Route::get('/products/favorites', [ProductController::class, 'getFavorites']);
-Route::post('/products/setFavorites', [ProductController::class, 'toFavorites']);
+Route::get('/favorites', [ProductController::class, 'getFavorites']);
+Route::post('/setFavorites', [ProductController::class, 'toFavorites']);
+Route::delete('/favorites/remove/{id}', [ProductController::class, 'removeFromFavorites']);
 
 Route::post('/cart/insertCart', [CartController::class, 'insertCart']);
 Route::get('/cart/{id}', [CartController::class, 'getCart']);
-Route::post('/makeOrder', [CartController::class, 'makeOrder']);
-Route::delete('/cart/{id}', [CartController::class, 'removeFromCart']);
+Route::post('/cart/makeOrder', [CartController::class, 'makeOrder']);
+Route::delete('/cart/remove/{id}', [CartController::class, 'removeFromCart']);
 
 Route::get('/orders', [OrderController::class, 'getOrder']);
 
