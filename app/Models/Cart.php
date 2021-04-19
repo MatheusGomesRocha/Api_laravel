@@ -19,6 +19,13 @@ class Cart extends Model
         ]);
     }
 
+    public static function verifyProductAndUser($userId, $productId) {
+        return DB::table('cart')
+        ->where('userId', '=', $userId)
+        ->where('productId', '=', $productId)
+        ->first();
+    }
+
     public static function getCart($userId)
     {
         return DB::table('cart')

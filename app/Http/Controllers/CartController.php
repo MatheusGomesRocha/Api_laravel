@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Cart;
+use Illuminate\Support\Facades\DB;
 
 class CartController extends Controller
 {
@@ -14,14 +15,23 @@ class CartController extends Controller
         $productId = $request->input('productId');
         $productQuantity = $request->input('quantity');
 
-        $insert = Cart::insertCart($userId, $productId, $productQuantity);
+        $verify = Cart::verifyProductAndUser($userId, $productId);
 
-        if($insert) {
-            $this->response['result'] = 'Added to cart';
+        if($verify) {
+            DB::table('cart')->where('userId', '=', $userId)->where('productId', '=', $productId)
+            ->update([
+                'quantity' => $productQuantity + $verify->quantity
+            ]);
         } else {
-            $this->response['error'] = 'Sorry, something went wrong';
-        }
+            $insert = Cart::insertCart($userId, $productId, $productQuantity);
 
+            if($insert) {
+                $this->response['result'] = 'Added to cart';
+            } else {
+                $this->response['error'] = 'Sorry, something went wrong';
+            }
+        }
+        
         return $this->response;
     }
 
