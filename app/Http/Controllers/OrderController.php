@@ -13,15 +13,13 @@ class OrderController extends Controller
     public function getOrder() {
         $orders = Order::getOrders('27');
 
-        $result = json_decode($orders);
-
-        foreach($result as $query) {
+        foreach($orders as $query) {
 
             $this->response['result'][] = [
                 'order' => $query
             ]; 
         }
 
-        return $this->response;
+        return $this->response['result'];
     }
 }
