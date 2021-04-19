@@ -86,75 +86,8 @@ class ProductController extends Controller
         return $this->response;
     }
 
-    public function toFavorites(Request $request) {
-        $productId = $request->input('productId');
-        $userId = $request->input('userId');
-        
-        $exists = Product::verifyFavorites($userId, $productId);
-        $product = Product::product($productId);
 
-        // Verifica se tem algum produto com o ID enviado
-        if(!$product) {
-            $this->response['error'] = 'Sorry, you try to added an product that do not exist';
-        } else {    
-            // Verifica se já existe esse produto enviado na lista do usuário enviado
-            if(!$exists) {
-                $setFavorite = Product::setFavorites($userId, $productId);
-                
-                if($setFavorite) {
-                    $this->response['result'] = 'This product is now on your favorite list';
-                } else {
-                    $this->response['error'] = 'Sorry, something went wrong';
-                }
-            } else {
-                $this->response['error'] = "You've already added this product";
-            }    
-        }
-
-        return $this->response;
-    }
-
-    public function getFavorites(Request $request) {
-        $userId = $request->input('userId');
-
-        $favorites = Product::getFavorites($userId);
-
-        if($favorites->count() === 0) {
-            $this->response['error'] = "Sorry, you didn't added any product to your favorite list";
-        } else {
-            foreach($favorites as $query) {
-                $this->response['result'][] = [
-                    'name' => $query->name,
-                    'price' => $query->price,
-                    'img' => $query->img,
-                ];
-            }
-        }
-
-        return $this->response;
-    }
-
-    public function removeFromFavorites(Request $request, $userId) {
-        $productId = $request->input('productId');
-
-        $verify = Product::verifyFavorites($userId, $productId);
-
-        if(!$verify) {
-            $this->response['error'] = 'Sorry, something went wrong';
-        } else {
-            $delete = Product::removeFromFavorites($userId, $productId);
-
-            if($delete) {
-                $this->response['result'] = '';
-            } else {
-                $this->response['error'] = "Sorry, couldn't deleted";
-            }
-        }
-
-        return $this->response;
-    }
-
-
+    
     private function validationProduct($data)
     {
         $regras = [

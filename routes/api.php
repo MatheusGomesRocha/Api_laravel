@@ -30,16 +30,16 @@ Route::get('/users', [UserController::class, 'getUsers']);
 Route::get('/user/{user}', [UserController::class, 'getUserLogin']);
 Route::post('/registerUser', [UserController::class, 'registerUser']);
 Route::post('/login', [UserController::class, 'login']);
-Route::delete('/user/delete/{user}', [UserController::class, 'delete']);
-Route::put('/user/update/{user}', [UserController::class, 'update']);
-Route::post('/user/avatar', [UserController::class, 'updateAvatar']);
+Route::delete('/user/{user}/delete', [UserController::class, 'delete']);
+Route::put('/user/{user}/update', [UserController::class, 'update']);
+Route::post('/user/{user}/avatar', [UserController::class, 'updateAvatar']);
+Route::get('/user/{user}/favorites', [UserController::class, 'getFavorites']);
+Route::post('/user/{user}/setFavorites', [UserController::class, 'toFavorites']);
+Route::delete('/user/favorites/remove/{id}', [UserController::class, 'removeFromFavorites']);
 
 Route::post('/createProduct', [ProductController::class, 'createProduct']);
 Route::get('/products', [ProductController::class, 'getProducts']);
 Route::get('/product/{id}', [ProductController::class, 'getOneProduct']);
-Route::get('/favorites', [ProductController::class, 'getFavorites']);
-Route::post('/setFavorites', [ProductController::class, 'toFavorites']);
-Route::delete('/favorites/remove/{id}', [ProductController::class, 'removeFromFavorites']);
 
 Route::post('/cart/insertCart', [CartController::class, 'insertCart']);
 Route::get('/cart/{id}', [CartController::class, 'getCart']);
