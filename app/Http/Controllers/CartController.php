@@ -51,15 +51,7 @@ class CartController extends Controller
 
         $cart = Cart::getCartToOrder($userId);
 
-        $array = [];
-
-        foreach($cart as $query) {
-            $array[] = $query->productId;
-        }
-        
-        $implode = implode(', ', $array);
-
-        $makeOrder = Cart::makeOrder($implode, $subtotal, $userId);
+        $makeOrder = Cart::makeOrder($cart, $subtotal, $userId);
 
         if($makeOrder) {
             $this->response['result'] = 'Success, just wait to your products';

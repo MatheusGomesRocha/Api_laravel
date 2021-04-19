@@ -27,9 +27,17 @@ class UserController extends Controller
             ];
         }
 
+        $teste = '';
+
+        if(Auth::check()) {
+            $teste = 'olá mundo';
+        } else {
+            $teste = 'hehehe';
+        }
+
         // return $this->response;
 
-        return view('welcome')->with('users', $users);
+        return view('welcome')->with('teste', $teste);
     }
 
     public function login(Request $request)
@@ -46,19 +54,21 @@ class UserController extends Controller
         ];
 
         if (Auth::attempt($credentials)) {
-            $userInfo = User::getUser($request->input('user'));
+            if(Auth::check()) {
+                $userInfo = User::getUser($request->input('user'));
 
-            $this->response['result'] = [
-                'id' => $userInfo->id,
-                'avatar' => url('storage/media/avatars/' . $userInfo->avatar),
-                'user' => $userInfo->user
-            ];
-
+                $this->response['result'] = [
+                    'id' => $userInfo->id,
+                    'avatar' => url('storage/media/avatars/' . $userInfo->avatar),
+                    'user' => $userInfo->user,
+                ];    
+            }
+            
         } else {
             $this->response['error'] = "Login doesn't exist";
         }
 
-        return $this->response;
+       return $this->response;
     }
 
     public function registerUser(Request $request)

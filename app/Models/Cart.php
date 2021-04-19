@@ -29,9 +29,10 @@ class Cart extends Model
 
     public static function getCartToOrder($userId)
     {
-        return DB::table('cart')
-            ->select('productId')
-            ->where('userId', '=', $userId)
+        return DB::table('products')
+        ->join('cart', 'cart.productId', '=', 'products.id')
+        ->select('products.name', 'products.price')
+        ->where('cart.userId', '=', $userId)
             ->get();
 }
 

@@ -86,6 +86,22 @@ class ProductController extends Controller
         return $this->response;
     }
 
+    public function toFavorites(Request $request) {
+        $productId = $request->input('productId');
+        $userId = $request->input('userId');
+        
+        $setFavorite = Product::setFavorite($userId, $productId);
+        
+        if($setFavorite) {
+            $this->response['result'] = 'This product is now on your favorite list';
+        } else {
+            $this->response['error'] = 'Sorry, something went wrong';
+        }
+
+        return $this->response;
+    }
+
+
 
     private function validationProduct($data)
     {

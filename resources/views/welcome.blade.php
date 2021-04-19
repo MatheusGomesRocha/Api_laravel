@@ -11,9 +11,13 @@
 <body class="antialiased">
 <div>
 
+    <form method="post" action="/api/login">
+        <input name="user" />
+        <input name="password" />
+        <input type="submit" />
+    </form>
 
-
-
+        {{$teste}}
 </div>
 </body>
 </html>

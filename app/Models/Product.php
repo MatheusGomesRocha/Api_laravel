@@ -29,4 +29,12 @@ class Product extends Model
     public static function product($id) {
         return DB::table('products')->where('id', '=', $id)->first();
     }
+    
+    public static function getFavorites($userId) {
+        return DB::table('favorites')->where('userId', '=', $userId)->first();
+    }
+
+    public static function setFavorites($userId, $productId) {
+        
+    }
 }
