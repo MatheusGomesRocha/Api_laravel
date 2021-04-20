@@ -10,6 +10,7 @@ class Order extends Model
 {
     use HasFactory;
 
+    // Pega os pedidos feitos pelo o usuário logado
     public static function getOrders($userId) {
         return DB::table('orders')->where('userId', '=', $userId)->get();
     }

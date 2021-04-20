@@ -11,7 +11,8 @@ class OrderController extends Controller
 {
     private $response = ['error' => '', 'result' => []];
 
-    public function getOrder(Request $request) {
+    // Pega os pedidos do usuário logado
+    public function getOrder($userId) {
         $userId = $request->input('userId');
 
         $orders = Order::getOrders($userId);

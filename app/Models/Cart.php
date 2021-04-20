@@ -10,6 +10,7 @@ class Cart extends Model
 {
     use HasFactory;
 
+    // Insere um produto no carrinho
     public static function insertCart($userId, $productId, $productQuantity)
     {
         return DB::table('cart')->insert([
@@ -19,6 +20,7 @@ class Cart extends Model
         ]);
     }
 
+    // Verifica se o usuário já adicionou esse produto ao carrinho
     public static function verifyProductAndUser($userId, $productId) {
         return DB::table('cart')
         ->where('userId', '=', $userId)
@@ -26,6 +28,7 @@ class Cart extends Model
         ->first();
     }
 
+    // Pega os produtos do carrinho
     public static function getCart($userId)
     {
         return DB::table('cart')
@@ -34,6 +37,9 @@ class Cart extends Model
             ->get();
     }
 
+    /* Pega o ID do produto que está no Cart, compara com os o ID do produto que está em Product
+        e retorna as informações do produto para inserir no Orders 
+    */ 
     public static function getCartToOrder($userId)
     {
         return DB::table('products')
@@ -43,6 +49,7 @@ class Cart extends Model
         ->get();
     }
 
+    // Faz o pedido, inserindo numa tabela Orders
     public static function makeOrder($cart, $subtotal, $userId)
     {
         return DB::table('orders')->insert([
@@ -52,6 +59,7 @@ class Cart extends Model
         ]);
     }
 
+    // Remove um produto do carrinho
     public static function removeFromCart($id) {
         return DB::table('cart')->where('id', '=', $id)->delete();
     }

@@ -10,6 +10,7 @@ class Product extends Model
 {
     use HasFactory;
 
+    // Adiciona um produto
     public static function newProduct($img, $name, $price, $description, $category, $time) {
         return DB::table('products')->insert([
             'img' => $img,
@@ -22,10 +23,12 @@ class Product extends Model
         ]);
     }
 
+    // Pega todos os produtos
     public static function products() {
         return DB::table('products')->get();
     }
 
+    // Pega apenas o produto selecionado
     public static function product($id) {
         return DB::table('products')->where('id', '=', $id)->first();
     }

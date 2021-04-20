@@ -10,6 +10,7 @@ class CartController extends Controller
 {
     private $response = ['error' => '', 'result' => []];
 
+    // Adiciona um produto ao carirnho
     public function insertCart(Request $request) {
         $userId = $request->input('userId');
         $productId = $request->input('productId');
@@ -35,6 +36,7 @@ class CartController extends Controller
         return $this->response;
     }
 
+    // Pega os produtos que estão no carrinho
     public function getCart($userId) {
         $cart = Cart::getCart($userId);
 
@@ -55,8 +57,8 @@ class CartController extends Controller
         return $this->response;
     }
 
-    public function makeOrder(Request $request) {
-        $userId = $request->input('userId');
+    // Faz o pedido, inserindo na tabela Orders
+    public function makeOrder(Request $request, $userId) {
         $subtotal = $request->input('subtotal');
 
         $cart = Cart::getCartToOrder($userId);
@@ -72,6 +74,7 @@ class CartController extends Controller
         return $this->response;
     }
 
+    // Remove um produto do carrinho
     public function removeFromCart($id) {
         $delete = Cart::removeFromCart($id);
 

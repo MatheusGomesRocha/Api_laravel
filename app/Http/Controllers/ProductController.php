@@ -10,12 +10,13 @@ class ProductController extends Controller
 {
     private $response = ['error' => '', 'result' => []];
 
+    // Adiciona um novo produto
     public function createProduct(Request $request) {
 
         $validation = $this->validationProduct($request->all());
 
         if ($validation->fails()) {
-            return $this->response['error'] = 'Campos não preenchidos';
+            return $this->response['error'] = 'Preencha todos os campos com *';
         }
 
         $img = $request->file('img');
@@ -49,6 +50,7 @@ class ProductController extends Controller
         return $this->response;
     }
 
+    // Pega todos os produtos
     public function getProducts() {
         $products = Product::products();
 
@@ -72,6 +74,7 @@ class ProductController extends Controller
         return $this->response;
     }
 
+    // Pega apenas o produto selecionado
     public function getOneProduct($id) {
         $product = Product::product($id);
 
@@ -87,7 +90,7 @@ class ProductController extends Controller
     }
 
 
-    
+    // Validação dos Inputs ao adicionar um novo produto
     private function validationProduct($data)
     {
         $regras = [

@@ -13,40 +13,17 @@ use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+    // Variável que retorna as querys, error quando dá algum erro, e result quando dá tudo certo
     private $response = ['error' => '', 'result' => []];
 
-    public function getUsers()
-    {
-        $users = User::getUsers();
 
-        $cart = Cart::getCart('27');
-
-        foreach ($users as $query) {
-            $this->response['result'][] = [
-                'nome' => $query->name,
-                'email' => $query->email,
-            ];
-        }
-
-        $teste = '';
-
-        if(Auth::check()) {
-            $teste = 'olá mundo';
-        } else {
-            $teste = 'hehehe';
-        }
-
-        // return $this->response;
-
-        return view('welcome')->with('teste', $teste);
-    }
-
-    public function login(Request $request)
-    {
+    // Função que realiza o login, retornando as informações do usuário caso tenha feito o login
+    // corretamente
+    public function login(Request $request) {
         $validation = $this->validationLogin($request->all());
 
         if ($validation->fails()) {
-            return $this->response['error'] = 'Campos não preenchidos';
+            return $this->response['error'] = 'Preencha todos os campos com *';
         }
 
         $credentials = [
@@ -72,12 +49,12 @@ class UserController extends Controller
        return $this->response;
     }
 
-    public function registerUser(Request $request)
-    {
+    // Registra um novo usuário
+    public function registerUser(Request $request) {
         $validation = $this->validationRegister($request->all());
 
         if ($validation->fails()) {
-            return $this->response['error'] = 'Campos não preenchidos';
+            return $this->response['error'] = 'Preencha todos os campos com *';
         }
 
         $hasUser = DB::table('users')->select('*')->where('user', '=', $request->input('user'))->count();
@@ -101,8 +78,8 @@ class UserController extends Controller
         return $this->response;
     }
 
-    public function delete(Request $request, $user)
-    {
+    // Delete a própria conta do usuário
+    public function delete(Request $request, $user) {
         $userInfo = User::getUser($user);
         $password = $request->input('password');
 
@@ -122,12 +99,12 @@ class UserController extends Controller
         return $this->response;
     }
 
-    public function update(Request $request, $user)
-    {
+    // Faz um update de nome, email ou senha. Pedindo a confirmação da senha para ficar seguro
+    public function update(Request $request, $user) {
         $validation = $this->validationUpdate($request->all());
 
         if ($validation->fails()) {
-            return $this->response['error'] = 'Campos não preenchidos';
+            return $this->response['error'] = 'Preencha todos os campos com *';
         }
 
         $userInfo = User::getUser($user);
@@ -173,12 +150,13 @@ class UserController extends Controller
         return $this->response;
     }
 
-    public function getUserLogin($user)
-    {
-        $userInfo = User::getUser($user);
+    // Pega o usuário logado
+    public function getUserLogin($userId) {
+        $userInfo = User::getUser($userId);
 
         if ($userInfo) {
             $this->response['result'] = [
+                'id' => $userInfo->id,
                 'avatar' => url('storage/media/avatars/' . $userInfo->avatar),
                 'name' => $userInfo->name,
                 'user' => $userInfo->user,
@@ -190,10 +168,9 @@ class UserController extends Controller
         return $this->response;
     }
 
-    public function updateAvatar(Request $request)
-    {
+    // Edita o avatar do usuário
+    public function updateAvatar(Request $request, $userId) {
         $image = $request->file('avatar');
-        $user = $request->input('user');
 
         if ($image) {
             if ($request->hasFile('avatar') && $request->file('avatar')->isValid()) {
@@ -203,7 +180,7 @@ class UserController extends Controller
                 $file = "$img.$extensao";
                 $upload = $request->file('avatar')->storeAs('public/media/avatars/', $file);
 
-                DB::table('users')->where('user', '=', $user)->update([
+                DB::table('users')->where('id', '=', $userId)->update([
                     'avatar' => $file,
                 ]);
 
@@ -218,9 +195,8 @@ class UserController extends Controller
         return $this->response;
     }
 
-    public function getFavorites(Request $request) {
-        $userId = $request->input('userId');
-
+    // Pega os produtos favoritos do usuário logado
+    public function getFavorites(Request $request, $userId) {
         $favorites = User::getFavorites($userId);
 
         if($favorites->count() === 0) {
@@ -238,10 +214,9 @@ class UserController extends Controller
         return $this->response;
     }
 
-    
-    public function toFavorites(Request $request) {
+    // Insere um produto aos favoritos
+    public function toFavorites(Request $request, $userId) {
         $productId = $request->input('productId');
-        $userId = $request->input('userId');
         
         $exists = User::verifyFavorites($userId, $productId);
         $product = Product::product($productId);
@@ -265,10 +240,9 @@ class UserController extends Controller
         }
 
         return $this->response;
-    }
+    }    
 
-    
-
+    // Deleta um produto dos favoritos
     public function removeFromFavorites(Request $request, $userId) {
         $productId = $request->input('productId');
 
@@ -289,7 +263,83 @@ class UserController extends Controller
         return $this->response;
     }
 
+    // Cria um endereço para usar nos pedidos (somente 1 por usuário)
+    public function createAddress(Request $request, $userId) {
+        $validation = $this->validationAddress($request->all());
 
+        if ($validation->fails()) {
+            return $this->response['error'] = 'Preencha todos os campos com *';
+        }
+
+        $bairro = $request->input('bairro');
+        $rua = $request->input('rua');
+        $numero = $request->input('numero');
+        $complemento = $request->input('complemento');
+        $referencia = $request->input('referencia');
+
+        if($numero) {
+            $complemento = '';
+        } 
+        if($complemento) {
+            $numero = '';
+        } 
+        if(!$referencia) {
+            $referencia = '';
+        } 
+
+        $userLogin = User::getUserLogin($userId);
+
+        if($userLogin === 0) {
+            $this->response['error'] = "You only can add 1 address";
+        } else {
+            $insert = User::createAddress($bairro, $rua, $numero, $complemento, $referencia, $userId);
+
+            if($insert) {
+                $this->response['result'] = 'Address added successfully';
+            } else {
+                $this->response['error'] = 'Sorry, try again';
+            }
+        }
+        
+
+        return $this->response;
+    }
+
+    // Deleta o endereço do usuário
+    public function removeAddress($userId) {
+        $delete = User::removeAddress($userId);
+
+        if($delete) {
+            $this->response['result'] = true;
+        } else {
+            $this->response['error'] = 'Sorry, try again';
+        }
+        
+        return $this->response;
+    }
+
+    // Pega o endereço do usuário
+    public function getAddress($userId) {
+        $address = User::getAddress($userId);
+
+        if(!$address) {
+            $this->response['error'] = "Please add a address";
+        } else {
+            $this->response['result'][] = [
+                'bairro' => $address->bairro,
+                'rua' => $address->rua,
+                'numero' => $address->numero,
+                'complemento' => $address->complemento,
+                'referencia' => $address->referencia,
+            ]; 
+        }
+
+        return $this->response;
+    }
+
+
+
+    // Validação dos inputs do Cadastro de Usuários
     private function validationRegister($data)
     {
         $regras = [
@@ -310,6 +360,7 @@ class UserController extends Controller
         return Validator::make($data, $regras, $mensagens);
     }
 
+    // Validação dos inputs do Login
     private function validationLogin($data)
     {
         $regras = [
@@ -325,6 +376,7 @@ class UserController extends Controller
         return Validator::make($data, $regras, $mensagens);
     }
 
+    // Validação dos inputs da Edição das informações do Usuário
     private function validationUpdate($data)
     {
         $regras = [
@@ -333,6 +385,22 @@ class UserController extends Controller
 
         $mensagens = [
             'password.required' => 'Preencha o campo senha',
+        ];
+
+        return Validator::make($data, $regras, $mensagens);
+    }
+
+    // Validação dos inputs do Endereço
+    private function validationAddress($data)
+    {
+        $regras = [
+            'bairro' => 'required',
+            'rua' => 'required',
+        ];
+
+        $mensagens = [
+            'bairro.required' => 'Preencha o campo usuário',
+            'rua.required' => 'Preencha o campo senha',
         ];
 
         return Validator::make($data, $regras, $mensagens);
